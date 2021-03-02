@@ -1,0 +1,15 @@
+<resources>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="share_with">Share with</string>
+    <string name="whatsapp">Whatsapp</string>
+    <string name="instagram">Instagram</string>
+    <string name="messenger">Messenger</string>
+    <string name="facebook">Facebook</string>
+    <string name="snapchat">Snapchat</string>
+    <string name="twitter">Twitter</string>
+    <string name="copy_link">Copy Link</string>
+    <string name="more_apps">More Apps</string>
+    <string name="share_text">Share text</string>
+
+</resources>

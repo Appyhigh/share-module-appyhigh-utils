@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottomsheet"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:elevation="10dp"
+    android:theme="@style/AppBottomSheetDialogTheme"
+    android:orientation="vertical"
+    android:padding="16dp"
+    app:behavior_hideable="true"
+    app:layout_behavior="@string/bottom_sheet_behavior"
+
+    tools:ignore="PrivateResource">
+
+    <abhishekti.appyhigh.customshare.ui.CustomShareTextView
+        android:id="@+id/custom_share_bottom_sheet_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/share_with"
+        app:typeface="poppins_medium.ttf"
+        android:textColor="@android:color/black"
+        android:layout_gravity="center"
+        android:paddingVertical="10dp"
+        android:textSize="14sp"/>
+
+    <RelativeLayout
+        android:id="@+id/custom_share_rl_share"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/custom_share_ic_share"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@android:color/black"
+            android:src="@drawable/custom_share_placeholder"/>
+
+        <RelativeLayout
+            android:id="@+id/custom_share_rl_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:paddingHorizontal="4dp"
+            android:layout_toEndOf="@id/custom_share_ic_share"
+            android:gravity="center_vertical">
+
+            <abhishekti.appyhigh.customshare.ui.CustomShareTextView
+                android:id="@+id/custom_share_file_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="File name"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:textSize="14sp"
+                android:textColor="@android:color/black"
+                app:typeface="poppins_regular.ttf"/>
+
+            <abhishekti.appyhigh.customshare.ui.CustomShareTextView
+                android:id="@+id/custom_share_file_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="File"
+                android:textSize="12sp"
+                android:textColor="#686868"
+                android:layout_below="@id/custom_share_file_name"
+                app:typeface="poppins_regular.ttf"/>
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#e4e4e4"
+        android:layout_marginVertical="8dp"
+        android:paddingHorizontal="4dp"/>
+
+    <GridView
+        android:id="@+id/custom_share_grid_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:numColumns="4"
+        android:gravity="center"/>
+
+</LinearLayout>
