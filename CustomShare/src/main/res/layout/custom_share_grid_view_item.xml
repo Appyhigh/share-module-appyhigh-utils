@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/custom_share_ll_whatsapp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingVertical="10dp"
+    android:paddingHorizontal="4dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/custom_share_item_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/custom_share_ic_whatsapp" />
+
+    <abhishekti.appyhigh.customshare.ui.CustomShareTextView
+        android:id="@+id/custom_share_item_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/whatsapp"
+        android:layout_marginTop="@dimen/custom_share_margin_top"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/custom_share_title_text_size"
+        app:typeface="poppins_regular.ttf" />
+
+</LinearLayout>

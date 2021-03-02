@@ -1,0 +1,3 @@
+include ':CustomShare'
+include ':app'
+rootProject.name = "ShareIntentExample"
