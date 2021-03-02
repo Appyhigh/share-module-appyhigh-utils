@@ -2,7 +2,7 @@
 
 # AppyHigh Utils Share Intent Module
 
-![Kotlin](https://img.shields.io/badge/Kotlin-0095D5?&style=for-the-badge&logo=kotlin&logoColor=white) ![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)
+[![](https://jitpack.io/v/Appyhigh/share-module-appyhigh-utils.svg?style=flat-square)](https://jitpack.io/#Appyhigh/share-module-appyhigh-utils) ![Kotlin](https://img.shields.io/badge/Kotlin-0095D5?&style=for-the-badge&logo=kotlin&logoColor=white) ![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)
 
 *This module has been written in Kotlin but a seperate in java is also available for all the java devs out there.*
 
@@ -30,6 +30,19 @@ For Texts, there is an option which allows the user to copy the text to the clip
 
 <br />
 <br />
+
+## Download
+Gradle:
+
+```groovy
+repositories {
+    maven { url ‘https://jitpack.io’ }
+}
+
+dependencies {
+    implementation 'com.github.Appyhigh:share-module-appyhigh-utils:$latest_version'
+}
+```
 
 #### Simple usage snippet
 ------
