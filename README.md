@@ -30,7 +30,6 @@ For Texts, there is an option which allows the user to copy the text to the clip
 
 <br />
 <br />
-<br />
 
 #### Simple usage snippet
 ------
@@ -51,7 +50,6 @@ val fileData = CustomShareFile(filePath, fileName, fileUri, mimeType)
 ```
 <br />
 <br />
-<br />
 
 ### Required Variables for object `CustomShareDataText` :  
  - Text Data to be shared
@@ -67,7 +65,6 @@ val fileData = CustomShareFile(filePath, fileName, fileUri, mimeType)
 
 <br />
 <br />
-<br />
 
 ### Sample invocation of the function
 
@@ -75,9 +72,48 @@ val fileData = CustomShareFile(filePath, fileName, fileUri, mimeType)
 CustomShare.getInstance(activity: this, fragmentManager: supportFragmentManager)
            .Builder()
            .setShareData(fileData)
+           .isLocalFile(false) //true if file is a local file
            .show()
 ```
 
+<br/><br/>
 
+## Local / Internal Files
+These are the files which are local to the app using this module and reside in the applications data folder. Applications on api level 30(Android Q) and above will throw and exception when the app tries to access uri of a file which is local to the app. To avoid this exception, the app must use the `FileProvider` api.
+Fortunately for you, this module takes care of the underlying implementation. There are, however, some prerequisites if you intent to have this use case in your app.
+
+1. Define the `FileProvider` in your AndroidManifest file. To do this, just add the following in your manifest file:
+```java
+ <provider
+        android:name="androidx.core.content.FileProvider"
+        android:authorities="${applicationId}.provider"
+        android:exported="false"
+        android:grantUriPermissions="true">
+        <meta-data
+              android:name="android.support.FILE_PROVIDER_PATHS"
+              android:resource="@xml/provider_paths" />
+</provider>
+```
+2. Create an XML file that contains all paths that the `FileProvider` will share with other applications. For this, create a file named `provider_paths.xml` at `res/xml/` and paste the following code:
+```kotlin
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <external-path name="external_files" path="."/>
+</paths>
+```
+3. Bundle a valid URI in the module invocation and activate it. The module takes care of this step. 
+
+4. Now you just have to specify to the module that the file you want to share is a local file. For this just pass `true` to the this method in the `builder`: 
+    ```kotlin
+    isLocalFile(true)
+    ```
+
+<br/><br/>
+
+## Exceptions
+
+There a couple of custom exceptions which act as checks to help the developer using this module.
+
+ - `IllegalConfigurationException` : This exception is thrown if the `Builder` has a null value for the configuration object
+ - `IllegalDataParametersException` : This exceptions is thrown when the file is specified to be a local file but the file path is null.
 <br /><br /><br />
 ## Developed with :heart: by Abhishek Tiwari 
