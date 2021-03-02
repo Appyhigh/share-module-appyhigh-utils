@@ -2,6 +2,10 @@
 
 # AppyHigh Utils Share Intent Module
 
+![Kotlin](https://img.shields.io/badge/Kotlin-0095D5?&style=for-the-badge&logo=kotlin&logoColor=white) ![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)
+
+*This module has been written in Kotlin but a seperate in java is also available for all the java devs out there.*
+
 This module packages a custom designed share intent which can be used with all types of files to give a customized user
 interface to the application.
 
