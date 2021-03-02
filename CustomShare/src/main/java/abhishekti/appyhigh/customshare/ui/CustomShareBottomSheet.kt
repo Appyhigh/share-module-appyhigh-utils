@@ -16,19 +16,36 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.Toast
+import androidx.core.content.FileProvider
+import androidx.fragment.app.FragmentManager
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import java.io.File
 import java.lang.Exception
+import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Created by Abhishek Tiwari on 02-03-2021.
  */
-class CustomShareBottomSheet(config: Config?) : BottomSheetDialogFragment() {
+class CustomShareBottomSheet(private val config: Config?) : BottomSheetDialogFragment() {
 
     private lateinit var bottomSheetBinding: FragmentCustomShareBottomSheetBinding
-    private val config = config
     private lateinit var shareIntent: Intent
 
+
+    /**
+     * Overriding this function to catch exceptions in the cases when the button is clicked
+     * twice and two or more successive add fragment calls are queued up.
+     */
+    override fun show(manager: FragmentManager, tag: String?) {
+        try{
+            manager.beginTransaction().remove(this).commit()
+            super.show(manager, tag)
+        }catch (e: Exception){
+            e.printStackTrace()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,7 +55,6 @@ class CustomShareBottomSheet(config: Config?) : BottomSheetDialogFragment() {
         bottomSheetBinding =
             FragmentCustomShareBottomSheetBinding.inflate(inflater, container, false)
         val view: View = bottomSheetBinding.root
-        val context = view.context
 
         initConfig()
         return view
@@ -48,7 +64,7 @@ class CustomShareBottomSheet(config: Config?) : BottomSheetDialogFragment() {
         shareIntent = Intent()
         shareIntent.action = Intent.ACTION_SEND
 
-        var item_list: ArrayList<CustomShareGridViewModel> = ArrayList()
+        val item_list: ArrayList<CustomShareGridViewModel> = ArrayList()
         item_list.add(
             CustomShareGridViewModel(
                 Constants.CUSTOM_SHARE_ID_WHATSAPP,
@@ -122,9 +138,20 @@ class CustomShareBottomSheet(config: Config?) : BottomSheetDialogFragment() {
             val fileData: CustomShareDataFile = config.getCustomShareData() as CustomShareDataFile
 
             shareIntent.type = fileData.getFileType()
-            shareIntent.putExtra(Intent.EXTRA_STREAM, fileData.getFileUri())
+            if(config.getIsLocalFile()){
+                val uri: Uri = FileProvider.getUriForFile(
+                    context!!,
+                    context!!.applicationContext.packageName+".provider",
+                    File(fileData.getFilePath()!!)
+                )
+                shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
+                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }else{
+                shareIntent.putExtra(Intent.EXTRA_STREAM, fileData.getFileUri())
+            }
 
-            if (fileData.getFileType().toLowerCase().equals("image")) {
+
+            if (fileData.getFileType().toLowerCase(Locale.ROOT).equals("image")) {
                 Glide.with(context!!)
                     .load(fileData.getFileUri())
                     .centerCrop()
@@ -179,6 +206,7 @@ class CustomShareBottomSheet(config: Config?) : BottomSheetDialogFragment() {
         try{
             startActivity(shareIntent)
         }catch (e: Exception){
+            e.printStackTrace()
             openPlayStore(packageName)
         }
     }

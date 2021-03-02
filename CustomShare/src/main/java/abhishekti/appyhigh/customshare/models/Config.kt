@@ -5,6 +5,16 @@ package abhishekti.appyhigh.customshare.models
  */
 class Config {
     private var customShareData: CustomShareData? = null
+    private var isLocalFile: Boolean = false
+
+    fun getIsLocalFile(): Boolean{
+        return isLocalFile
+    }
+
+    fun setIsLocalFile(isLocal: Boolean){
+        this.isLocalFile = isLocal
+    }
+
     fun getCustomShareData(): CustomShareData? {
         return customShareData
     }

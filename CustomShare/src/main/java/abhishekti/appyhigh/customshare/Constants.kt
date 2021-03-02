@@ -12,4 +12,6 @@ object Constants {
     const val CUSTOM_SHARE_ID_TWITTER = 5
     const val CUSTOM_SHARE_ID_COPY = 7
     const val CUSTOM_SHARE_ID_MORE = 6
+
+    const val CUSTOM_SHARE_BOTTOM_SHEET_TAG = "custom_share_intent"
 }
