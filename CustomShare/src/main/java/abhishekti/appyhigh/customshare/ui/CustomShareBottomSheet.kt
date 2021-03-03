@@ -9,6 +9,10 @@ import abhishekti.appyhigh.customshare.models.CustomShareDataFile
 import abhishekti.appyhigh.customshare.models.CustomShareDataText
 import abhishekti.appyhigh.customshare.models.CustomShareGridViewModel
 import android.content.*
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -39,10 +43,10 @@ class CustomShareBottomSheet(private val config: Config?) : BottomSheetDialogFra
      * twice and two or more successive add fragment calls are queued up.
      */
     override fun show(manager: FragmentManager, tag: String?) {
-        try{
+        try {
             manager.beginTransaction().remove(this).commit()
             super.show(manager, tag)
-        }catch (e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }
@@ -121,6 +125,8 @@ class CustomShareBottomSheet(private val config: Config?) : BottomSheetDialogFra
 
             bottomSheetBinding.customShareFileName.text = textData.getText()
             bottomSheetBinding.customShareFileType.text = "Text"
+            bottomSheetBinding.customShareIcShare.setImageResource(R.drawable.custom_share_text_placeholder)
+
             shareIntent.type = "text/plain"
             shareIntent.putExtra(Intent.EXTRA_TEXT, textData.getText())
             shareIntent.putExtra(
@@ -136,76 +142,116 @@ class CustomShareBottomSheet(private val config: Config?) : BottomSheetDialogFra
             )
         } else {
             val fileData: CustomShareDataFile = config.getCustomShareData() as CustomShareDataFile
+            val fileType: String = fileData.getFileType()
 
-            shareIntent.type = fileData.getFileType()
-            if(config.getIsLocalFile()){
+            shareIntent.type = fileType
+
+            if (config.getIsLocalFile()) {
                 val uri: Uri = FileProvider.getUriForFile(
                     context!!,
-                    context!!.applicationContext.packageName+".provider",
+                    context!!.applicationContext.packageName + ".provider",
                     File(fileData.getFilePath()!!)
                 )
                 shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
                 shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            }else{
+            } else {
                 shareIntent.putExtra(Intent.EXTRA_STREAM, fileData.getFileUri())
             }
 
 
-            if (fileData.getFileType().toLowerCase(Locale.ROOT).equals("image")) {
-                Glide.with(context!!)
-                    .load(fileData.getFileUri())
-                    .centerCrop()
-                    .into(bottomSheetBinding.customShareIcShare)
-            }
+//            if (fileType.toLowerCase(Locale.ROOT).contains("image")) {
+//                Glide.with(context!!)
+//                    .load(fileData.getFileUri())
+//                    .centerCrop()
+//                    .into(bottomSheetBinding.customShareIcShare)
+//            } else if (fileType.toLowerCase(Locale.ROOT).contains("pdf")) {
+//                bottomSheetBinding.customShareIcShare.setImageResource(R.drawable.custom_share_pdf_placeholder)
+//            } else if (fileType.toLowerCase(Locale.ROOT).contains("text")) {
+//                val textIcon: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.custom_share_text_placeholder)
+//                val canvas: Canvas = Canvas(textIcon)
+//                canvas.drawColor(Color.WHITE)
+//                canvas.drawBitmap(textIcon, 0, null)
+//
+//                Glide.with(context!!)
+//                    .load(textIcon)
+//                    .into(bottomSheetBinding.customShareIcShare)
+//            } else if (fileType.toLowerCase(Locale.ROOT).contains("excel")) {
+//                bottomSheetBinding.customShareIcShare.setImageResource(R.drawable.custom_share_excel_placeholder)
+//            } else if (fileType.toLowerCase(Locale.ROOT).contains("document")) {
+//                bottomSheetBinding.customShareIcShare.setImageResource(R.drawable.custom_share_docx_placeholder)
+//            } else {
+//                bottomSheetBinding.customShareIcShare.setImageResource(R.drawable.custom_share_file_placeholder)
+//            }
+
             bottomSheetBinding.customShareFileName.text = fileData.getFileName()
             bottomSheetBinding.customShareFileType.text = fileData.getDisplayFileType()
         }
 
         val adapter = CustomShareGridItemAdapter(context!!, item_list)
         bottomSheetBinding.customShareGridView.adapter = adapter
-        bottomSheetBinding.customShareGridView.onItemClickListener = AdapterView.OnItemClickListener{ _, _, position, _ ->
-            if(position == Constants.CUSTOM_SHARE_ID_WHATSAPP){
-                shareTargeted("com.whatsapp")
-            }else if(position == Constants.CUSTOM_SHARE_ID_MESSENGER){
-                shareTargeted("com.facebook.orca")
-            }else if(position == Constants.CUSTOM_SHARE_ID_INSTAGRAM){
-                shareTargeted("com.instagram.android")
-            }else if(position == Constants.CUSTOM_SHARE_ID_FACEBOOK){
-                shareTargeted("com.facebook.katana")
-            }else if(position == Constants.CUSTOM_SHARE_ID_SNAPCHAT){
-                shareTargeted("com.snapchat.android")
-            }else if(position == Constants.CUSTOM_SHARE_ID_TWITTER){
-                shareTargeted("com.twitter.android")
-            }else if(position == Constants.CUSTOM_SHARE_ID_COPY){
-                copyText()
-            }else if(position == Constants.CUSTOM_SHARE_ID_MORE){
-                startActivity(Intent.createChooser(shareIntent, context!!.resources.getString(R.string.share_text)))
+        bottomSheetBinding.customShareGridView.onItemClickListener =
+            AdapterView.OnItemClickListener { _, _, position, _ ->
+                if (position == Constants.CUSTOM_SHARE_ID_WHATSAPP) {
+                    shareTargeted("com.whatsapp")
+                } else if (position == Constants.CUSTOM_SHARE_ID_MESSENGER) {
+                    shareTargeted("com.facebook.orca")
+                } else if (position == Constants.CUSTOM_SHARE_ID_INSTAGRAM) {
+                    shareTargeted("com.instagram.android")
+                } else if (position == Constants.CUSTOM_SHARE_ID_FACEBOOK) {
+                    shareTargeted("com.facebook.katana")
+                } else if (position == Constants.CUSTOM_SHARE_ID_SNAPCHAT) {
+                    shareTargeted("com.snapchat.android")
+                } else if (position == Constants.CUSTOM_SHARE_ID_TWITTER) {
+                    shareTargeted("com.twitter.android")
+                } else if (position == Constants.CUSTOM_SHARE_ID_COPY) {
+                    copyText()
+                } else if (position == Constants.CUSTOM_SHARE_ID_MORE) {
+                    startActivity(
+                        Intent.createChooser(
+                            shareIntent,
+                            context!!.resources.getString(R.string.share_text)
+                        )
+                    )
+                }
+                dismiss()
             }
-            dismiss()
-        }
     }
 
-    fun copyText(){
+    fun copyText() {
         val textData: CustomShareDataText = config!!.getCustomShareData() as CustomShareDataText
-        val clipboardManager:ClipboardManager = context!!.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val clipData = ClipData.newPlainText(context!!.resources.getString(R.string.share_text), textData.getText())
+        val clipboardManager: ClipboardManager =
+            context!!.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clipData = ClipData.newPlainText(
+            context!!.resources.getString(R.string.share_text),
+            textData.getText()
+        )
         clipboardManager.setPrimaryClip(clipData)
         Toast.makeText(context!!, "Text copied", Toast.LENGTH_SHORT).show()
     }
 
-    fun openPlayStore(packageName: String){
-        try{
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=${packageName}")))
-        }catch (e: ActivityNotFoundException){
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=${packageName}")))
+    fun openPlayStore(packageName: String) {
+        try {
+            startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("market://details?id=${packageName}")
+                )
+            )
+        } catch (e: ActivityNotFoundException) {
+            startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://play.google.com/store/apps/details?id=${packageName}")
+                )
+            )
         }
     }
 
-    fun shareTargeted(packageName: String){
+    fun shareTargeted(packageName: String) {
         shareIntent.`package` = packageName;
-        try{
+        try {
             startActivity(shareIntent)
-        }catch (e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             openPlayStore(packageName)
         }

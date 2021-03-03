@@ -32,6 +32,16 @@ class CustomShareDataFile(filePath: String?, fileName: String, fileUri: Uri?, fi
                 result = "JPG Image"
             } else if (extension.contains("pdf")) {
                 result = "PDF"
+            } else if(extension.contains("txt")){
+                result = "Text File"
+            } else if(extension.contains("pdf")){
+                result = "PDF File"
+            } else if(extension.contains("xls")){
+                result = "Excel File"
+            } else if(extension.contains("docx")){
+                result = "Document File"
+            } else {
+                result = "File"
             }
             return result
         }
